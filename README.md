@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/github/forks/StenlyTU/K8s-training-official?style=social">
 </p>
 
-# K8s Practice Training 
+# K8s Practice Training
 
 The goal of this tutorial is to give good understanding of Kubernetes and help preparing you for CKA, CKAD and CKS.
 
@@ -21,67 +21,68 @@ During the tutorial every user is going to create personal namespace and execute
 
 There are 50+ tasks with increasing difficulty. Tested with K8s version 1.19.2 and kubectl version 1.19.2.
 
-## K8s learning materials: ##
- 
-1. Docker is a must. You can start with the book ***Docker in Action***. The book can be [*downloaded*](https://www.pdfdrive.com/docker-in-action-e34422630.html) from Internet.
-2. Check the free K8s courses in EDX: https://www.edx.org/course/introduction-to-kubernetes
-3. The book ***Kubernetes in action*** gives good general overview. The book can be [*downloaded*](https://github.com/indrabasak/Books/blob/master/Kubernetes%20in%20Action.pdf) from Internet.
-4. For security related topics have a look at ***Container Security by Liz Rice***. The book can be [*downloaded*](https://cdn2.hubspot.net/hubfs/1665891/Assets/Container%20Security%20by%20Liz%20Rice%20-%20OReilly%20Apr%202020.pdf) from Internet.
-4. And ofc https://kubernetes.io/docs/home/
+## K8s learning materials:
 
-## Hands-on experience: ##
+1. Docker is a must. You can start with the book **_Docker in Action_**. The book can be [_downloaded_](https://www.pdfdrive.com/docker-in-action-e34422630.html) from Internet.
+2. Check the free K8s courses in EDX: https://www.edx.org/course/introduction-to-kubernetes
+3. The book **_Kubernetes in action_** gives good general overview. The book can be [_downloaded_](https://github.com/indrabasak/Books/blob/master/Kubernetes%20in%20Action.pdf) from Internet.
+4. For security related topics have a look at **_Container Security by Liz Rice_**. The book can be [_downloaded_](https://cdn2.hubspot.net/hubfs/1665891/Assets/Container%20Security%20by%20Liz%20Rice%20-%20OReilly%20Apr%202020.pdf) from Internet.
+5. And ofc https://kubernetes.io/docs/home/
+
+## Hands-on experience:
+
 Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     export KUBECONFIG=/path/to/the/kubeconfig.yaml
 
-### Core Concepts ###
+### Core Concepts
 
-1. **Create namespace called *practice*. All following commands will be run into this namespace if not specified.**
-    
+1.  **Create namespace called _practice_. All following commands will be run into this namespace if not specified.**
+
     <details><summary>show</summary><p>
 
     ```
-    kubectl create ns practice
+    kubectl create ns my-practise
     ```
 
-    **Take-away**: always try to use shortnames. To find the shortname of resource run -> *kubectl api-resources | grep namespaces*
+    **Take-away**: always try to use shortnames. To find the shortname of resource run -> _kubectl api-resources | grep namespaces_
 
-2. **Create two pods with *nginx* image named *nginx1* and *nginx2* into your namespace. All of them should have the label *app=v1*.**
+2.  **Create two pods with ** image named _dokuwiki1_ and _dokuwiki2_ into your namespace. All of them should have the label _app=dokuwiki_.\*\*
      <details><summary>show</summary><p>
 
-        kubectl run -n practice nginx1 --image=nginx --restart=Never --labels=app=v1
-        kubectl run -n practice nginx2 --image=nginx --restart=Never --labels=app=v1
+        kubectl run -n my-practice dokuwiki1 --image=bitnami/dokuwiki --restart=Never --labels=app=dokuwiki
+        kubectl run -n my-practice dokuqiki2 --image=bitnami/dokuwiki --restart=Never --labels=app=dokuwiki
 
-    **Take-away**: Try to learn most important *kubectl run* options which can save you a lot of time and manual work on yaml files.
+    **Take-away**: Try to learn most important _kubectl run_ options which can save you a lot of time and manual work on yaml files.
 
-3. **Change pod *nginx2* label to *app=v2*.**
+3.  **Change pod _dokuwiki2_ label to _app=wiki_.**
     <details><summary>show</summary><p>
 
-        kubectl -n practice label po nginx2 app=v2 --overwrite
-        
-    **Take-away**: use *--overwrite* when **changing** labels.
+        kubectl -n practice label po dokuwiki2 app=wiki --overwrite
 
-4. **Get only pods with label *app=v2* from all namespaces.**
+    **Take-away**: use _--overwrite_ when **changing** labels.
+
+4.  **Get only pods with label _app=wiki_ from all namespaces.**
     <details><summary>show</summary><p>
 
-        kubectl get pods --all-namespaces=true -l app=v2
+        kubectl get pods --all-namespaces=true -l app=wiki
 
     **Take-away**: -l can be used to filter resources by labels.
-    
-    **Alternative**: `kubectl get pods -A -l app=v2`
 
-5. **Remove the nginx pods to clean your namespace.**
+    **Alternative**: `kubectl get pods -A -l app=wiki`
+
+5.  **Remove the nginx pods to clean your namespace.**
     <details><summary>show</summary><p>
 
-        kubectl -n practice delete pod nginx{1,2}
+        kubectl -n practice delete pod dokuwiki{1,2}
 
     **Take-away**: Here we are using Brace Expansion to save time.
 
-6. **Create a messaging pod using *redis:alpine* image with label set to *tier=msg*. Check pod's labels.**
+6.  **Create a messaging pod using _bitnami/redis:6.2.7_ image with label set to _tier=msg_. Check pod's labels.**
 
     <details><summary>show</summary><p>
 
-        kubectl run -n practice messaging --image redis:alpine -l tier=msg
+        kubectl run -n my-practice messaging --image=bitnami/redis:6.2.7 -l tier=msg
 
     ```
     kubectl -n practice describe pod messaging| head
@@ -97,15 +98,15 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
     Status:       Running
     ```
 
-    **Take-away**: Use -l alongside *kubectl run* to create pods with specific label.
+    **Take-away**: Use -l alongside _kubectl run_ to create pods with specific label.
 
-7. **Create a service called *messaging-service* to expose the messaging application within the cluster on port 6379 and describe it.**
+7.  **Create a service called _messaging-service_ to expose the messaging application within the cluster on port 6379 and describe it.**
     <details><summary>show</summary><p>
 
     ```
     kubectl -n practice expose pod messaging --name messaging-service --port 6379
     ```
-    
+
     ```
     $ kubectl -n practice describe svc messaging-service
     Name:              messaging-service
@@ -121,51 +122,52 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
     Session Affinity:  None
     Events:            <none>
     ```
-    **Take-away**: *kubectl expose* is easy way to create service automatically when applicable.
 
-8. **Create a *busybox-echo* pod that echoes 'hello world' and exits. After that check the logs.**
+    **Take-away**: _kubectl expose_ is easy way to create service automatically when applicable.
+
+8.  **Create a _busybox-echo_ pod that echoes 'hello world' and exits. After that check the logs.**
 
     <details><summary>show</summary><p>
 
         kubectl -n practice run busybox-echo --image=busybox --command -- echo "Hello world"
         kubectl -n practice logs busybox-echo
 
-    **Take-away**: with *--command* we can execute commands from within the container.
+    **Take-away**: with _--command_ we can execute commands from within the container.
 
-9. **Create an *nginx-test* pod and set an env value as *var1=val1*. Check the env value existence within the pod.**
+9.  **Create an _nginx-test_ pod and set an env value as _var1=val1_. Check the env value existence within the pod.**
 
     <details><summary>show</summary><p>
 
         kubectl -n practice run nginx-test --image=nginx --env=var1=val1
         kubectl -n practice exec -it nginx-test -- env # should see var1=val1 in the output
 
-### Deployments ###
+### Deployments
 
-10. **Create a deployment named *hr-app* using the image *nginx:1.18* with 2 replicas.**
-    
+10. **Create a deployment named _hr-app_ using the image _nginx:1.18_ with 2 replicas.**
+
     <details><summary>show</summary><p>
 
         kubectl -n practice create deployment hr-app --image=nginx:1.18 --replicas=2
 
-    **Take-away**: *--replicas=2* is the number of replicas to create, default is 1.
+    **Take-away**: _--replicas=2_ is the number of replicas to create, default is 1.
 
-11. **Scale *hr-app* deployment to 3 replicas.**
+11. **Scale _hr-app_ deployment to 3 replicas.**
     <details><summary>show</summary><p>
 
         kubectl -n practice scale deploy/hr-app --replicas 3
-    
+
     **Take-away**: resource_type/resource_name syntax can also be used.
 
-12. **Update the *hr-app* image to nginx:1.19.**
+12. **Update the _hr-app_ image to nginx:1.19.**
     <details><summary>show</summary><p>
 
         kubectl -n practice set image deploy/hr-app nginx=nginx:1.19
 
     **Take-away**: `nginx=nginx:1.19` syntax is confusing. `nginx` is the container name.
 
-    **Alternative**: You can also edit the deployment manually with *kubectl -n practice edit deploy/hr-app*
+    **Alternative**: You can also edit the deployment manually with _kubectl -n practice edit deploy/hr-app_
 
-13. **Check the rollout history of *hr-app* and confirm that the replicas are OK.**
+13. **Check the rollout history of _hr-app_ and confirm that the replicas are OK.**
      <details><summary>show</summary><p>
 
         kubectl -n practice rollout history deploy hr-app
@@ -180,24 +182,23 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
         kubectl -n practice get po # select one of the 'Running' pods
         kubectl -n practice describe po hr-app-695f79495-6gfsw | grep -i Image: # should be nginx:1.18
 
-15. **Do an update of the deployment with a wrong image *nginx:1.91* and check the status.**
+15. **Do an update of the deployment with a wrong image _nginx:1.91_ and check the status.**
     <details><summary>show</summary><p>
 
         kubectl -n practice set image deploy/hr-app nginx=nginx:1.91
         kubectl -n practice rollout status deploy hr-app
         kubectl -n practice get po # you'll see 'ImagePullBackOff'
 
-16. **Return the deployment to working state and verify the image is *nginx:1.19*.**
+16. **Return the deployment to working state and verify the image is _nginx:1.19_.**
     <details><summary>show</summary><p>
 
         kubectl -n practice rollout undo deploy hr-app
         kubectl -n practice describe deploy hr-app | grep Image:
         kubectl -n practice get pods -l app=hr-app
 
+### Scheduling
 
-### Scheduling ###
-
-17. **Shedule a nginx pod on specific node using *NodeName*.**
+17. **Shedule a nginx pod on specific node using _NodeName_.**
 
      <details><summary>show</summary><p>
 
@@ -230,11 +231,11 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     Create the pod and check where the pod was scheduled.
 
-    *Hint: Use '-o wide' to check on which node the pod landed.*
+    _Hint: Use '-o wide' to check on which node the pod landed._
 
-    **Take-away**: *--dry-run=client* is used to check if the resource can be created. Adding *-o yaml > filename.yaml* redirects the raw output to file.
+    **Take-away**: _--dry-run=client_ is used to check if the resource can be created. Adding _-o yaml > filename.yaml_ redirects the raw output to file.
 
-18. **Schedule a nginx pod based on node label using *nodeSelector*.**
+18. **Schedule a nginx pod based on node label using _nodeSelector_.**
 
     <details><summary>show</summary><p>
 
@@ -262,7 +263,7 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     **Take-away**: A taint allows a node to refuse pod to be scheduled unless that pod has a matching toleration.
 
-20. **Create another pod called *nginx-toleration* with *nginx* image, which tolerates the above taint.**
+20. **Create another pod called _nginx-toleration_ with _nginx_ image, which tolerates the above taint.**
 
     <details><summary>show</summary><p>
 
@@ -276,7 +277,7 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     **Take-away**: Pods can be scheduled on taint nodes if they tolerate the taint.
 
-21. **Create a *DaemonSet* using image *fluentd-elasticsearch:1.20*.**
+21. **Create a _DaemonSet_ using image _fluentd-elasticsearch:1.20_.**
 
     <details><summary>show</summary><p>
 
@@ -311,7 +312,7 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     **Take-away**: A DaemonSet ensures that all (or some) Nodes run a copy of a Pod.
 
-22. **Add label *color=blue* to one node and create nginx deployment called *blue* with 5 replicas and node Affinity rule to place the pods onto the labeled node.**
+22. **Add label _color=blue_ to one node and create nginx deployment called _blue_ with 5 replicas and node Affinity rule to place the pods onto the labeled node.**
 
     <details><summary>show</summary><p>
 
@@ -354,10 +355,9 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     **Take-away**: Node affinity is a set of rules used by the scheduler to determine where a pod can be placed.
 
+### Configurations
 
-### Configurations ###
-
-23. **Create a configmap named *my-config* with values *key1=val1* and *key2=val2*. Check it's values.**
+23. **Create a configmap named _my-config_ with values _key1=val1_ and _key2=val2_. Check it's values.**
     <details><summary>show</summary><p>
 
     [ConfigMap documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/)
@@ -367,7 +367,7 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     **Take-away**: ConfigMap gives you a way to inject configurational data into your application.
 
-24. **Create a configMap called *opt* with value *key5=val5*. Create a new *nginx-opt* pod that loads the value from key *key5* in an env variable called *OPTIONS*.**
+24. **Create a configMap called _opt_ with value _key5=val5_. Create a new _nginx-opt_ pod that loads the value from key _key5_ in an env variable called _OPTIONS_.**
     <details><summary>show</summary><p>
 
     [Configmap documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap)
@@ -378,31 +378,31 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     **Take-away**: ConfigMap is namespaced resource.
 
-25. **Create a configmap *anotherone* with values *var6=val6* and *var7=val7*. Load this configmap as an env variables into a *nginx-sec* pod.**
+25. **Create a configmap _anotherone_ with values _var6=val6_ and _var7=val7_. Load this configmap as an env variables into a _nginx-sec_ pod.**
     <details><summary>show</summary><p>
 
     [Configmap documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap)
 
         kubectl -n practice exec -it nginx-sec -- env | grep var # should return var6=val6\nvar7=val7
 
-26. **Create a configMap *cmvolume* with values *var8=val8* and *var9=val9*. Load this as a volume inside an *nginx-cm* pod on path */etc/spartaa*. Create the pod and 'ls' into the */etc/spartaa* directory.**
+26. **Create a configMap _cmvolume_ with values _var8=val8_ and _var9=val9_. Load this as a volume inside an _nginx-cm_ pod on path _/etc/spartaa_. Create the pod and 'ls' into the _/etc/spartaa_ directory.**
     <details><summary>show</summary><p>
 
     [Configmap documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap)
 
-    *Hints: create the CM and use --dry-run=client to generate the yaml. After that add the corresponding fieds to the yaml.*
+    _Hints: create the CM and use --dry-run=client to generate the yaml. After that add the corresponding fieds to the yaml._
 
         kubectl -n practice exec -it nginx-cm -- ls /etc/spartaa # should return var8 var9
 
-27. **Create an *nginx-requests* pod with requests *cpu=100m, memory=256Mi* and limits *cpu=200m, memory=512Mi*.**
+27. **Create an _nginx-requests_ pod with requests _cpu=100m, memory=256Mi_ and limits _cpu=200m, memory=512Mi_.**
 
     <details><summary>show</summary><p>
 
     [Assign Resources documentation](https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/)
 
-    *Hint: check kubectl run options.*
+    _Hint: check kubectl run options._
 
-28. **Create a secret called *mysecret* with values *password=mypass* and check its yaml.**
+28. **Create a secret called _mysecret_ with values _password=mypass_ and check its yaml.**
 
     <details><summary>show</summary><p>
 
@@ -412,25 +412,24 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     **Take-away**: Secrets are base64 encoded not encrypted -> bXlwYXNz.
 
-29. **Create an nginx pod that mounts the secret *mysecret* in a volume on path */etc/foo*.**
+29. **Create an nginx pod that mounts the secret _mysecret_ in a volume on path _/etc/foo_.**
 
     <details><summary>show</summary><p>
 
     [How to use Secrets](https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/)
 
-    *Hint: The approach is similar to configMaps.*
+    _Hint: The approach is similar to configMaps._
 
     **Take-away**: Secret is namespaced resource.
 
-
-### Observability ###
+### Observability
 
 30. **Get the list of nodes in JSON format and store it in a file.**
-    
+
     <details><summary>show</summary><p>
 
         kubectl get nodes -o json > brahmaputra.json
-    
+
     **Take-away**: Check what other output formats are available.
 
 31. **Get CPU/memory utilization for nodes.**
@@ -438,10 +437,10 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
      <details><summary>show</summary><p>
 
         kubectl top nodes
-    
-    **Take-away**: *kubectl top pods --all-namespaces=true* can be used for pods.
 
-32. **Create an nginx pod with a liveness probe that just runs the command *ls*. Check probe status.**
+    **Take-away**: _kubectl top pods --all-namespaces=true_ can be used for pods.
+
+32. **Create an nginx pod with a liveness probe that just runs the command _ls_. Check probe status.**
 
     <details><summary>show</summary><p>
 
@@ -484,23 +483,22 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
     [Configure Liveness, Readiness Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
         kubectl -n practice run nginx-ready --image=nginx --dry-run=client -o yaml --port=80 > pod_readiness.yaml
-    
+
     Find what needs to be added to the file from the above documentation.
 
     **Take-away**: K8s uses readiness probes to decide when the container is available for accepting traffic.
 
-34. **Use JSON PATH query to retrieve the *osImages* of all the nodes.**
+34. **Use JSON PATH query to retrieve the _osImages_ of all the nodes.**
 
     <details><summary>show</summary><p>
 
         kubectl get nodes -o jsonpath="{.items[*].status.nodeInfo.osImage}"
-    
+
     You should see something like that: Container Linux by CoreOS 2303.3.0 (Rhyolite)
 
     **Take-away**: Try to understand the construct of the query.
 
-
-### Storage ###
+### Storage
 
 35. **Create a PersistentVolume of 1Gi, called 'myvolume-practice'. Make it have accessMode of 'ReadWriteOnce' and 'ReadWriteMany', storageClassName 'normal', mounted on hostPath '/etc/foo'. List all PersistentVolume**
 
@@ -509,6 +507,7 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
     [PersistentVolume documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolume)
 
     Use the following output:
+
     ```YAML
     kind: PersistentVolume
     apiVersion: v1
@@ -524,6 +523,7 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
       hostPath:
         path: /etc/foo
     ```
+
         kubectl get pv # status should be Available
 
     **Take-away**: PersistentVolume is not namespaced resource.
@@ -550,9 +550,9 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     Nope
 
-### Security ####
+### Security
 
-39. **Create *busybox-user* pod that runs sleep for 1 hour and has user ID set to 101. Check the UID from within the container.**
+39. **Create _busybox-user_ pod that runs sleep for 1 hour and has user ID set to 101. Check the UID from within the container.**
 
     <details><summary>show</summary><p>
 
@@ -592,7 +592,7 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     [Security Context documentation](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
-41. **Create a new service account with the name *pvviewer-practice*. Grant this Service account access to list all PersistentVolumes in the cluster by creating an appropriate cluster role called *pvviewer-role-practice* and ClusterRoleBinding called *pvviewer-role-binding-practice***
+41. **Create a new service account with the name _pvviewer-practice_. Grant this Service account access to list all PersistentVolumes in the cluster by creating an appropriate cluster role called _pvviewer-role-practice_ and ClusterRoleBinding called _pvviewer-role-binding-practice_**
 
     <details><summary>show</summary><p>
 
@@ -604,19 +604,19 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     **Take-away**: Read the documentation and try to understand more for Role, ClusterRole, RoleBinding and ClusterRoleBinding.
 
-### Networking ###
+### Networking
 
-42. **Create a pod with image nginx called *nginx-1* and expose its port 80.**
+42. **Create a pod with image nginx called _nginx-1_ and expose its port 80.**
 
     <details><summary>show</summary><p>
 
         kubectl -n practice run nginx-1 --image=nginx --port=80 --expose
-    
+
     Check that both pod and service are created.
 
     **Take-away**: --expose can be really handy for basic services.
 
-43. **Get service's ClusterIP, create a temp *busybox-1* pod and 'hit' that IP with wget.**
+43. **Get service's ClusterIP, create a temp _busybox-1_ pod and 'hit' that IP with wget.**
 
     <details><summary>show</summary><p>
 
@@ -637,7 +637,7 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
         / # wget -O- $NODE_IP:$NODE_PORT
 
-45. **Create an *nginx-last* deployment of 2 replicas, expose it via a ClusterIP service on port 80. Create a NetworkPolicy so that only pods with labels 'access: granted' can access the deployment.**
+45. **Create an _nginx-last_ deployment of 2 replicas, expose it via a ClusterIP service on port 80. Create a NetworkPolicy so that only pods with labels 'access: granted' can access the deployment.**
 
     <details><summary>show</summary><p>
 
@@ -668,9 +668,9 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     **Take-away**: With NetworkPolicy you can configure how groups of pods are allowed to communicate with each other.
 
-### Challenging ###
+### Challenging
 
-46. **Create an nginx pod called *nginx-resolver* using image *nginx*, expose it internally with a service called *nginx-resolver-service*. Test that you are able to look up the service and pod names from within the cluster. Use the image: busybox:1.28 for dns lookup.**
+46. **Create an nginx pod called _nginx-resolver_ using image _nginx_, expose it internally with a service called _nginx-resolver-service_. Test that you are able to look up the service and pod names from within the cluster. Use the image: busybox:1.28 for dns lookup.**
     <details><summary>show</summary><p>
 
     You need to figure it out alone :)
@@ -679,21 +679,21 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     <details><summary>show</summary><p>
 
-    *Hint: use jsonpath*
+    _Hint: use jsonpath_
 
-48. **Taint one worker node to be Unschedulable. Once done, create a pod called *dev-redis* with image *redis:alpine* to ensure workloads are not scheduled to the tainted node. Finally, create a new pod called *prod-redis* with image *redis:alpine* with toleration to be scheduled on the tainted node.**
+48. **Taint one worker node to be Unschedulable. Once done, create a pod called _dev-redis_ with image _redis:alpine_ to ensure workloads are not scheduled to the tainted node. Finally, create a new pod called _prod-redis_ with image _redis:alpine_ with toleration to be scheduled on the tainted node.**
 
-49. **Create a Pod called *redis-storage* with image *redis:alpine* with a Volume of type emptyDir that lasts for the life of the Pod. Use volumeMount with mountPath = /data/redis.**
+49. **Create a Pod called _redis-storage_ with image _redis:alpine_ with a Volume of type emptyDir that lasts for the life of the Pod. Use volumeMount with mountPath = /data/redis.**
 
-50. **Create a new deployment called *nginx-deploy*, with image *nginx:1.16* and 1 replica. Record the version. Next upgrade the deployment to version 1.17 using rolling update. Make sure that the version upgrade is recorded in the resource annotation.**
+50. **Create a new deployment called _nginx-deploy_, with image _nginx:1.16_ and 1 replica. Record the version. Next upgrade the deployment to version 1.17 using rolling update. Make sure that the version upgrade is recorded in the resource annotation.**
 
-## Cleanup ##
+## Cleanup
 
     kubectl delete ns practice
 
-##  Other repos  ##
+## Other repos
 
-1. If you are interested in ***Linux*** have a look here: https://github.com/StenlyTU/LFCS-official
+1. If you are interested in **_Linux_** have a look here: https://github.com/StenlyTU/LFCS-official
 
 2. Linux Foundation LFCE knowledge base: coming soon
 
