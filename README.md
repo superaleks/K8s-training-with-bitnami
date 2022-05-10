@@ -47,7 +47,7 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     **Take-away**: always try to use shortnames. To find the shortname of resource run -> _kubectl api-resources | grep namespaces_
 
-2.  **Create two pods with ** image named _dokuwiki1_ and _dokuwiki2_ into your namespace. All of them should have the label _app=dokuwiki_\*\*
+2.  **Create two pods with image named _dokuwiki1_ and _dokuwiki2_ into your namespace. All of them should have the label _app=dokuwiki_ .**
      <details><summary>show</summary><p>
 
         kubectl run -n my-practice dokuwiki1 --image=bitnami/dokuwiki --restart=Never --labels=app=dokuwiki
