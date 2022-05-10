@@ -37,7 +37,7 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
 ### Core Concepts
 
-1.  **Create namespace called _my-practice_. All following commands will be run into this namespace if not specified.**
+1.  **Create a namespace called _my-practice_. All of the following commands should be executed into this namespace if not specified differently.**
 
     <details><summary>show</summary><p>
 
@@ -51,7 +51,7 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
      <details><summary>show</summary><p>
 
         kubectl run -n my-practice dokuwiki1 --image=bitnami/dokuwiki --restart=Never --labels=app=dokuwiki
-        kubectl run -n my-practice dokuqiki2 --image=bitnami/dokuwiki --restart=Never --labels=app=dokuwiki
+        kubectl run -n my-practice dokuwiki2 --image=bitnami/dokuwiki --restart=Never --labels=app=dokuwiki
 
     **Take-away**: Try to learn most important _kubectl run_ options which can save you a lot of time and manual work on yaml files.
 
@@ -104,7 +104,7 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
     <details><summary>show</summary><p>
 
     ```
-    kubectl -n practice expose pod messaging --name messaging-service --port 6379
+    kubectl -n my-practice expose pod messaging --name messaging-service --port 6379
     ```
 
     ```
@@ -125,21 +125,21 @@ Download the kubeconfig file from your cluster and configure kubectl to use it.
 
     **Take-away**: _kubectl expose_ is easy way to create service automatically when applicable.
 
-8.  **Create a _busybox-echo_ pod that echoes 'hello world' and exits. After that check the logs.**
+8.  **Create a _bitnami/busybox-echo_ pod that echoes 'Hello Kubernetes Learners' and exits. After that check the logs.**
 
     <details><summary>show</summary><p>
 
-        kubectl -n practice run busybox-echo --image=busybox --command -- echo "Hello world"
-        kubectl -n practice logs busybox-echo
+        kubectl -n my-practice run busybox-echo --image=busybox --command -- echo "Hello Kubernetes Learners!"
+        kubectl -n my-practice logs busybox-echo
 
     **Take-away**: with _--command_ we can execute commands from within the container.
 
-9.  **Create an _nginx-test_ pod and set an env value as _var1=val1_. Check the env value existence within the pod.**
+9.  **Create an _nginx-test_ pod using the Bitnami resoure and set an env value as _var1=val1_. Check the env value existence within the pod.**
 
     <details><summary>show</summary><p>
 
-        kubectl -n practice run nginx-test --image=nginx --env=var1=val1
-        kubectl -n practice exec -it nginx-test -- env # should see var1=val1 in the output
+        kubectl -n my-practice run nginx-test --image=bitnami/nginx --env=var1=val1
+        kubectl -n my-practice exec -it nginx-test -- env # should see var1=val1 in the output
 
 ### Deployments
 
